@@ -13,7 +13,7 @@ class PermissionAdmin(admin.ModelAdmin):
     list_display = ["permission_id","permission_name","permission_description"]
 
 class RolePermissionAdmin(admin.ModelAdmin):
-    list_display = ["role_id","permission_id"]
+    list_display = ["id","role_id","permission_id"]
 
 class UserPermissionAdmin(admin.ModelAdmin):
     list_display = ["id","user_id","permission_id"]
