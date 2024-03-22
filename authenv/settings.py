@@ -164,7 +164,7 @@ EMAIL_HOST_PASSWORD = "ewpbbxxzqrybpnaf"
 EMAIL_USE_TLS = True
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=200),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
     "AUTH_HEADER_TYPES": ("Bearer",),

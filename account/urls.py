@@ -26,5 +26,6 @@ urlpatterns = [
     path('send-reset-password-email/', SendPasswordResetEmailView.as_view(),
          name='send-reset-password-email'),
     path('reset-password/<uid>/<token>/', UserPasswordRestView.as_view()),
+     # path('reset-password/', UserPasswordRestView.as_view()),
     path('userdelete/', UserDeleteView.as_view(), name='UserDeleteView'),
 ]
