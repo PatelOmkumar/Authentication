@@ -19,6 +19,7 @@ from .models import Role
 from .models import Permission, RolePermission, UserPermission
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from django.http import JsonResponse
 
 # generate token manually
 
@@ -35,9 +36,8 @@ def get_tokens_for_user(user):
 class RoleListCreateView(generics.ListCreateAPIView):
 
     permission_classes = [permissions.IsAuthenticated]
-
-    queryset = Role.objects.all()
     serializer_class = RoleSerializer
+    queryset = Role.objects.all()
 
     @swagger_auto_schema(
         responses={
@@ -55,7 +55,25 @@ class RoleListCreateView(generics.ListCreateAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        view_name = 'roles'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            queryset = self.get_queryset()
+            serializer = self.serializer_class(queryset, many=True)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return response
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -80,13 +98,35 @@ class RoleListCreateView(generics.ListCreateAPIView):
         ],
     )
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+
+        view_name = 'roles'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
 
 class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes = [permissions.IsAuthenticated]
-
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
@@ -113,7 +153,30 @@ class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         ],
     )
     def put(self, request, *args, **kwargs):
-        return super().put(request, *args, **kwargs)
+
+        view_name = 'roles/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -138,7 +201,29 @@ class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         ],
     )
     def patch(self, request, *args, **kwargs):
-        return super().patch(request, *args, **kwargs)
+        view_name = 'roles/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
     @swagger_auto_schema(
         responses={
@@ -156,7 +241,27 @@ class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+
+        view_name = 'roles/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            # pk = kwargs.get('pk')
+            instance = self.get_object()
+            serializer = self.serializer_class(instance)
+            return JsonResponse(serializer.data)
+        else:
+            return response
 
     @swagger_auto_schema(
         responses={
@@ -174,13 +279,32 @@ class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         ],
     )
     def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
+
+        view_name = 'roles/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            # pk = kwargs.get('pk')
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return JsonResponse({'msg': 'deleted'})
+        else:
+            return response
 
 
 class PermissionListCreateView(generics.ListCreateAPIView):
 
     permission_classes = [permissions.IsAuthenticated]
-
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
 
@@ -200,7 +324,25 @@ class PermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        view_name = 'permission'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            queryset = self.get_queryset()
+            serializer = self.serializer_class(queryset, many=True)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return response
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -226,7 +368,28 @@ class PermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        view_name = 'permission'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, safe=False)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
 
 class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -260,7 +423,29 @@ class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         ],
     )
     def put(self, request, *args, **kwargs):
-        return super().put(request, *args, **kwargs)
+        view_name = 'permission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -286,7 +471,29 @@ class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         ],
     )
     def patch(self, request, *args, **kwargs):
-        return super().patch(request, *args, **kwargs)
+        view_name = 'permission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
     @swagger_auto_schema(
         responses={
@@ -304,7 +511,25 @@ class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         ],
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        view_name = 'permission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance)
+            return JsonResponse(serializer.data, status=200)
+        else:
+            return response
 
     @swagger_auto_schema(
         responses={
@@ -322,13 +547,30 @@ class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         ],
     )
     def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
+        view_name = 'permission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return JsonResponse({'msg': 'deleted'})
+        else:
+            return response
 
 
 class RolePermissionListCreateView(generics.ListCreateAPIView):
 
     permission_classes = [permissions.IsAuthenticated]
-
     queryset = RolePermission.objects.all()
     serializer_class = RolePermissionSerializer
 
@@ -348,7 +590,25 @@ class RolePermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        view_name = 'rolepermission'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            queryset = self.get_queryset()
+            serializer = self.serializer_class(queryset, many=True)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return response
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -374,7 +634,29 @@ class RolePermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        view_name = 'rolepermission'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=201)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
 
 class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -408,7 +690,29 @@ class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def put(self, request, *args, **kwargs):
-        return super().put(request, *args, **kwargs)
+        view_name = 'rolepermission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=201)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -434,7 +738,29 @@ class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def patch(self, request, *args, **kwargs):
-        return super().patch(request, *args, **kwargs)
+        view_name = 'rolepermission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
     @swagger_auto_schema(
         responses={
@@ -452,7 +778,25 @@ class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        view_name = 'rolepermission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance)
+            return JsonResponse(serializer.data, status=200)
+        else:
+            return response
 
     @swagger_auto_schema(
         responses={
@@ -470,7 +814,25 @@ class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
+        view_name = 'permission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return JsonResponse({'msg': 'deleted'})
+        else:
+            return response
 
 
 class UserPermissionListCreateView(generics.ListCreateAPIView):
@@ -496,7 +858,25 @@ class UserPermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        view_name = 'userpermission'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            queryset = self.get_queryset()
+            serializer = self.serializer_class(queryset, many=True)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return response
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -505,7 +885,7 @@ class UserPermissionListCreateView(generics.ListCreateAPIView):
                 'user_id': openapi.Schema(type=openapi.TYPE_INTEGER),
                 'permission_id': openapi.Schema(type=openapi.TYPE_INTEGER),
             },
-            required=['user_id','permission_id'],
+            required=['user_id', 'permission_id'],
         ),
         responses={
             201: openapi.Response('Response description', UserPermissionSerilizer),
@@ -522,7 +902,28 @@ class UserPermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        view_name = 'userpermission'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
 
 class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -539,7 +940,7 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
                 'user_id': openapi.Schema(type=openapi.TYPE_INTEGER),
                 'permission_id': openapi.Schema(type=openapi.TYPE_INTEGER),
             },
-            required=['user_id','permission_id'],
+            required=['user_id', 'permission_id'],
         ),
         responses={
             200: openapi.Response('Response description', UserPermissionSerilizer),
@@ -556,7 +957,29 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def put(self, request, *args, **kwargs):
-        return super().put(request, *args, **kwargs)
+        view_name = 'userpermission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, safe=False)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -565,7 +988,7 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
                 'user_id': openapi.Schema(type=openapi.TYPE_INTEGER),
                 'permission_id': openapi.Schema(type=openapi.TYPE_INTEGER),
             },
-            required=['user_id','permission_id'],
+            required=['user_id', 'permission_id'],
         ),
         responses={
             200: openapi.Response('Response description', UserPermissionSerilizer),
@@ -582,7 +1005,29 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def patch(self, request, *args, **kwargs):
-        return super().patch(request, *args, **kwargs)
+        view_name = 'userpermission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, safe=False)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return response
 
     @swagger_auto_schema(
         responses={
@@ -600,7 +1045,25 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        view_name = 'userpermission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            serializer = self.serializer_class(instance)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return response
 
     @swagger_auto_schema(
         responses={
@@ -618,7 +1081,25 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
+        view_name = 'userpermission/<int:pk>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return JsonResponse({'msg': 'deleted'})
+        else:
+            return response
 
 
 class UserRegistrationView(APIView):
@@ -758,11 +1239,28 @@ class AllUserDataView(APIView):
             )
         ]
     )
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        view_name = 'alluserdataview'
 
-        users = User.objects.all()
-        serializer = AllUserDataViewSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+
+            users = User.objects.all()
+            serializer = AllUserDataViewSerializer(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return response
+            # Middleware returned an error response
 
 
 class UserUpdateDetailsView(APIView):
@@ -772,14 +1270,14 @@ class UserUpdateDetailsView(APIView):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING),
+                'email': openapi.Schema(type=openapi.FORMAT_EMAIL),
                 'name': openapi.Schema(type=openapi.TYPE_STRING),
                 'phone': openapi.Schema(type=openapi.TYPE_STRING),
-                'date_of_birth': openapi.Schema(type=openapi.TYPE_STRING),
+                'date_of_birth': openapi.Schema(type=openapi.FORMAT_DATE),
                 'gender': openapi.Schema(type=openapi.TYPE_STRING),
                 'address': openapi.Schema(type=openapi.TYPE_STRING),
-                'password': openapi.Schema(type=openapi.TYPE_STRING),
-                'password2': openapi.Schema(type=openapi.TYPE_STRING),
+                'password': openapi.Schema(type=openapi.FORMAT_PASSWORD),
+                'password2': openapi.Schema(type=openapi.FORMAT_PASSWORD),
             },
             required=['email', 'name', 'phone', 'date_of_birth',
                       'gender', 'address', 'password', 'password2'],
@@ -800,11 +1298,27 @@ class UserUpdateDetailsView(APIView):
     )
     def put(self, request, format=None):
 
-        seriazer = UserUpdateDetailsSerializer(
-            data=request.data, context={'user': request.user})
-        if seriazer.is_valid(raise_exception=True):
-            return Response({'msg': 'User data updated successfully'}, status=status.HTTP_200_OK)
-        return Response(seriazer.errors, status=status.HTTP_400_BAD_REQUEST)
+        view_name = 'userupdatedetails'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            seriazer = UserUpdateDetailsSerializer(
+                data=request.data, context={'user': request.user})
+            if seriazer.is_valid(raise_exception=True):
+                return Response({'msg': 'User data updated successfully'}, status=status.HTTP_200_OK)
+            return Response(seriazer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return response
 
 
 class UserChangePasswordView(APIView):
@@ -835,11 +1349,28 @@ class UserChangePasswordView(APIView):
         ]
     )
     def post(self, request, format=None):
-        serializer = UserChangePasswordSerializer(
-            data=request.data, context={'user': request.user})
-        if serializer.is_valid(raise_exception=True):
-            return Response({'msg': 'password changed successfully'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        view_name = 'changepassword'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            serializer = UserChangePasswordSerializer(
+                data=request.data, context={'user': request.user})
+            if serializer.is_valid(raise_exception=True):
+                return Response({'msg': 'password changed successfully'}, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return response
 
 
 class SendPasswordResetEmailView(APIView):
@@ -858,10 +1389,27 @@ class SendPasswordResetEmailView(APIView):
         }
     )
     def post(self, request, format=None):
-        serializer = SendPasswordResetEmailSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            return Response({'msg': ' Email send successfully check your mail to verify'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        view_name = 'send-reset-password-email'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            serializer = SendPasswordResetEmailSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                return Response({'msg': ' Email send successfully check your mail to verify'}, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return response
 
 
 class UserPasswordRestView(APIView):
@@ -881,11 +1429,28 @@ class UserPasswordRestView(APIView):
         },
     )
     def post(self, request, uid, token, format=None):
-        serializer = UserPasswordResetSerializer(
-            data=request.data, context={'uid': uid, 'token': token})
-        if serializer.is_valid(raise_exception=True):
-            return Response({'msg': 'password reseted successfully'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        view_name = 'reset-password/<uid>/<token>/'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+            serializer = UserPasswordResetSerializer(
+                data=request.data, context={'uid': uid, 'token': token})
+            if serializer.is_valid(raise_exception=True):
+                return Response({'msg': 'password reseted successfully'}, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return response
 
 
 class UserDeleteView(APIView):
@@ -908,6 +1473,23 @@ class UserDeleteView(APIView):
     )
     def delete(self, request, format=None):
 
-        user = request.user  # Get authenticated user
-        user.delete()
-        return Response({'msg': 'User deleted successfully'}, status=status.HTTP_200_OK)
+        view_name = 'userdelete'
+
+        django_request = HttpRequest()
+        django_request.method = request.method
+        django_request.GET = request.query_params
+        django_request.POST = request.data
+        django_request.user = request.user
+        # Set this attribute to True to disable CSRF checks
+        django_request._dont_enforce_csrf_checks = True
+
+        middleware = ExampleMiddleware(get_response=self.dispatch)
+        response = middleware(django_request, view_name=view_name)
+
+        if response.status_code == 200:
+
+            user = request.user  # Get authenticated user
+            user.delete()
+            return Response({'msg': 'User deleted successfully'}, status=status.HTTP_200_OK)
+        else:
+            return response
