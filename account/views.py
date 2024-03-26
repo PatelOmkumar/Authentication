@@ -20,7 +20,7 @@ from .models import Permission, RolePermission, UserPermission
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.http import JsonResponse
-
+from account.enums import Endpoint
 # generate token manually
 
 
@@ -55,7 +55,7 @@ class RoleListCreateView(generics.ListCreateAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        view_name = 'roles'
+        view_name = Endpoint.ROLES.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -99,7 +99,7 @@ class RoleListCreateView(generics.ListCreateAPIView):
     )
     def post(self, request, *args, **kwargs):
 
-        view_name = 'roles'
+        view_name = Endpoint.ROLES.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -154,7 +154,7 @@ class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     )
     def put(self, request, *args, **kwargs):
 
-        view_name = 'roles/<int:pk>/'
+        view_name = Endpoint.ROLE_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -201,7 +201,7 @@ class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         ],
     )
     def patch(self, request, *args, **kwargs):
-        view_name = 'roles/<int:pk>/'
+        view_name = Endpoint.ROLE_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -242,7 +242,7 @@ class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     )
     def get(self, request, *args, **kwargs):
 
-        view_name = 'roles/<int:pk>/'
+        view_name = Endpoint.ROLE_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -280,7 +280,7 @@ class RoleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     )
     def delete(self, request, *args, **kwargs):
 
-        view_name = 'roles/<int:pk>/'
+        view_name = Endpoint.ROLE_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -324,7 +324,7 @@ class PermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        view_name = 'permission'
+        view_name = Endpoint.PERMISSION.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -368,7 +368,7 @@ class PermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def post(self, request, *args, **kwargs):
-        view_name = 'permission'
+        view_name = Endpoint.PERMISSION.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -423,7 +423,7 @@ class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         ],
     )
     def put(self, request, *args, **kwargs):
-        view_name = 'permission/<int:pk>/'
+        view_name = Endpoint.PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -471,7 +471,7 @@ class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         ],
     )
     def patch(self, request, *args, **kwargs):
-        view_name = 'permission/<int:pk>/'
+        view_name = Endpoint.PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -511,7 +511,7 @@ class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         ],
     )
     def get(self, request, *args, **kwargs):
-        view_name = 'permission/<int:pk>/'
+        view_name = Endpoint.PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -547,7 +547,7 @@ class PermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         ],
     )
     def delete(self, request, *args, **kwargs):
-        view_name = 'permission/<int:pk>/'
+        view_name = Endpoint.PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -590,7 +590,7 @@ class RolePermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        view_name = 'rolepermission'
+        view_name = Endpoint.ROLE_PERMISSION.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -634,7 +634,7 @@ class RolePermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def post(self, request, *args, **kwargs):
-        view_name = 'rolepermission'
+        view_name = Endpoint.ROLE_PERMISSION.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -690,7 +690,7 @@ class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def put(self, request, *args, **kwargs):
-        view_name = 'rolepermission/<int:pk>/'
+        view_name = Endpoint.ROLE_PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -738,7 +738,7 @@ class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def patch(self, request, *args, **kwargs):
-        view_name = 'rolepermission/<int:pk>/'
+        view_name = Endpoint.ROLE_PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -778,7 +778,7 @@ class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def get(self, request, *args, **kwargs):
-        view_name = 'rolepermission/<int:pk>/'
+        view_name = Endpoint.ROLE_PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -814,7 +814,7 @@ class RolePermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def delete(self, request, *args, **kwargs):
-        view_name = 'permission/<int:pk>/'
+        view_name = Endpoint.ROLE_PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -858,8 +858,7 @@ class UserPermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def get(self, request, *args, **kwargs):
-        view_name = 'userpermission'
-
+        view_name = Endpoint.USER_PERMISSION.value
         django_request = HttpRequest()
         django_request.method = request.method
         django_request.GET = request.query_params
@@ -902,7 +901,7 @@ class UserPermissionListCreateView(generics.ListCreateAPIView):
         ],
     )
     def post(self, request, *args, **kwargs):
-        view_name = 'userpermission'
+        view_name = Endpoint.USER_PERMISSION.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -957,7 +956,7 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def put(self, request, *args, **kwargs):
-        view_name = 'userpermission/<int:pk>/'
+        view_name = Endpoint.USER_PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1005,7 +1004,7 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def patch(self, request, *args, **kwargs):
-        view_name = 'userpermission/<int:pk>/'
+        view_name = Endpoint.USER_PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1045,7 +1044,7 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def get(self, request, *args, **kwargs):
-        view_name = 'userpermission/<int:pk>/'
+        view_name = Endpoint.USER_PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1081,7 +1080,7 @@ class UserPermissionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         ],
     )
     def delete(self, request, *args, **kwargs):
-        view_name = 'userpermission/<int:pk>/'
+        view_name = Endpoint.USER_PERMISSION_CRUD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1199,7 +1198,7 @@ class UserDataView(APIView):
     )
     def get(self, request, *args, **kwargs):
 
-        view_name = 'dataview'
+        view_name = Endpoint.DATA_VIEW.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1240,7 +1239,7 @@ class AllUserDataView(APIView):
         ]
     )
     def get(self, request, *args, **kwargs):
-        view_name = 'alluserdataview'
+        view_name = Endpoint.ALL_USER_DATA_VIEW.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1298,7 +1297,7 @@ class UserUpdateDetailsView(APIView):
     )
     def put(self, request, format=None):
 
-        view_name = 'userupdatedetails'
+        view_name = Endpoint.USER_UPDATE_DETAILS.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1350,7 +1349,7 @@ class UserChangePasswordView(APIView):
     )
     def post(self, request, format=None):
 
-        view_name = 'changepassword'
+        view_name = Endpoint.CHANGE_PASSWORD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1390,7 +1389,7 @@ class SendPasswordResetEmailView(APIView):
     )
     def post(self, request, format=None):
 
-        view_name = 'send-reset-password-email'
+        view_name = Endpoint.SEND_RESET_PASSWORD_EMAIL.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1430,7 +1429,7 @@ class UserPasswordRestView(APIView):
     )
     def post(self, request, uid, token, format=None):
 
-        view_name = 'reset-password/<uid>/<token>/'
+        view_name = Endpoint.RESET_PASSWORD.value
 
         django_request = HttpRequest()
         django_request.method = request.method
@@ -1473,7 +1472,7 @@ class UserDeleteView(APIView):
     )
     def delete(self, request, format=None):
 
-        view_name = 'userdelete'
+        view_name = Endpoint.USER_DELETE.value
 
         django_request = HttpRequest()
         django_request.method = request.method
